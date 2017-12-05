@@ -2,6 +2,8 @@
 ipython
 jupyter
 attrs
+numpy
+scipy
 Cython
 gensim
 click
