@@ -7,4 +7,6 @@ scipy
 Cython
 gensim
 tqdm
+pandas
+matplotlib
 click
