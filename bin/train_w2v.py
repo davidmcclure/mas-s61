@@ -18,7 +18,7 @@ logging.basicConfig(
 @click.argument('model_path', type=click.Path())
 @click.option('--size', default=200)
 @click.option('--min_count', default=1000)
-@click.option('--workers', default=8)
+@click.option('--workers', default=20)
 def main(corpus_path, model_path, size, min_count, workers):
 
     sentences = LineCorpus(corpus_path)
