@@ -24,7 +24,7 @@ def main(corpus_path, model_path, size, min_count, workers):
     sentences = LineCorpus(corpus_path)
 
     model = gensim.models.Word2Vec(
-        sentences,
+        list(sentences),
         size=size,
         min_count=min_count,
         workers=workers,
