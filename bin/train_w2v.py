@@ -4,6 +4,8 @@ import click
 import logging
 import gensim
 
+from tqdm import tqdm
+
 from sources import LineCorpus
 
 
@@ -21,10 +23,12 @@ logging.basicConfig(
 @click.option('--workers', default=20)
 def main(corpus_path, model_path, size, min_count, workers):
 
-    sentences = LineCorpus(corpus_path)
+    corpus = LineCorpus(corpus_path)
+
+    sentences = list(tqdm(corpus))
 
     model = gensim.models.Word2Vec(
-        list(sentences),
+        sentences,
         size=size,
         min_count=min_count,
         workers=workers,

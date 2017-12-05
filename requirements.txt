@@ -6,4 +6,5 @@ numpy
 scipy
 Cython
 gensim
+tqdm
 click
