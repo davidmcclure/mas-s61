@@ -20,7 +20,7 @@ do
   echo ${path}
 
   name=$(basename $path .txt)
-  vpath=$VOCAB_DIR/.$name.vocab.txt
+  vpath=$VOCAB_DIR/$name.vocab.txt
 
   $VOCAB_COUNT_CMD -max-vocab $MAX_VOCAB < $path > $vpath
   VOCAB_PATHS+=($vpath)
@@ -28,5 +28,3 @@ do
 done
 
 $MERGE_VOCABS_CMD ${VOCAB_PATHS[@]} > $MERGED_VOCAB_PATH
-
-rm ${VOCAB_PATHS[@]}
