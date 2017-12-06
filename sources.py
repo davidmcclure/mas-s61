@@ -31,7 +31,7 @@ def parse_glove_vocab(path):
                 token, count = line.strip().split()
                 vocab[token] = int(count)
             except Exception as e:
-                print(e)
+                pass
 
     return vocab
 
