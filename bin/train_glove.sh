@@ -1,14 +1,16 @@
 #!/bin/bash
 
-CORPUS=$1
-MODEL_PATH=$2
-MODEL_DIR=$(dirname "${MODEL_PATH}")
-VOCAB_FILE=$MODEL_DIR/vocab.txt
-COOCCURRENCE_FILE=$MODEL_DIR/cooccurrence.bin
-COOCCURRENCE_SHUF_FILE=$MODEL_DIR/cooccurrence.shuf.bin
-BUILDDIR=glove/build
+VOCAB_FILE=$1
+CORPUS_FILE=$2
+
+CORPUS_NAME=$(basename $CORPUS_FILE .txt)
+SAVE_FILE=$CORPUS_NAME.glove
+SAVE_DIR=$(dirname "${SAVE_FILE}")
+COOCCURRENCE_FILE=$SAVE_DIR/cooc.bin
+COOCCURRENCE_SHUF_FILE=$SAVE_DIR/cooc.shuf.bin
+BUILDDIR=$(dirname $0)/glove/build
+
 MEMORY=6.0
-MAX_VOCAB=10000
 VECTOR_SIZE=200
 MAX_ITER=25
 WINDOW_SIZE=15
@@ -16,16 +18,11 @@ BINARY=2
 NUM_THREADS=8
 X_MAX=10
 
-$BUILDDIR/vocab_count \
-  -max-vocab $MAX_VOCAB \
-  < $CORPUS \
-  > $MODEL_DIR/$VOCAB_FILE
-
 $BUILDDIR/cooccur \
   -memory $MEMORY \
   -vocab-file $VOCAB_FILE \
   -window-size $WINDOW_SIZE \
-  < $CORPUS \
+  < $CORPUS_FILE \
   > $COOCCURRENCE_FILE
 
 $BUILDDIR/shuffle \
@@ -34,9 +31,15 @@ $BUILDDIR/shuffle \
   > $COOCCURRENCE_SHUF_FILE
 
 $BUILDDIR/glove \
-  -save-file $MODEL_PATH \
+  -save-file $SAVE_FILE \
   -threads $NUM_THREADS \
   -input-file $COOCCURRENCE_SHUF_FILE \
   -iter $MAX_ITER \
   -vector-size $VECTOR_SIZE \
   -vocab-file $VOCAB_FILE
+
+rm ${COOCCURRENCE_FILE} ${COOCCURRENCE_SHUF_FILE}
+
+python -W ignore -m gensim.scripts.glove2word2vec \
+  --input $SAVE_FILE.txt \
+  --output $CORPUS_NAME.w2v.txt
