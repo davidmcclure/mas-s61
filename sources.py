@@ -1,22 +1,18 @@
 
 
-import attr
 import os
+import attr
 import re
 
 from glob import glob
 
 
 @attr.s
-class LineCorpus:
+class Corpus:
 
-    root = attr.ib()
-
-    def paths(self):
-        return glob(os.path.join(self.root, '*.txt'))
+    path = attr.ib()
 
     def __iter__(self):
-        for path in self.paths():
-            with open(path) as fh:
-                for line in fh:
-                    yield re.findall('[#@\w]+', line.lower())
+        with open(self.path) as fh:
+            for line in fh:
+                yield re.findall('\w+', line.lower())
